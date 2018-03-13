@@ -27,12 +27,11 @@ resource "aws_security_group" "allow_access_from_bastion" {
 resource "aws_instance" "bastion" {
   ami = "${var.bastion_ami}"
   instance_type = "t2.micro"
+  subnet_id = "${aws_subnet.subnet-public.id}"
   security_groups = ["${aws_security_group.bastion.id}"] 
 }
 
-/*
 resource "aws_eip" "bastion" {
   instance = "${aws_instance.bastion.id}"
   vpc = true
 }
-*/

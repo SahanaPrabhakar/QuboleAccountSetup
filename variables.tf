@@ -1,7 +1,14 @@
 variable "access_key" {}
 variable "secret_key" {}
 variable "region" {
-  default = "eu-west-2"
+  default = "eu-west-1"
+}
+variable "availability_zone" {
+  default = "eu-west-1b"
+}
+
+variable "s3_name" {
+  default = "sparkstoragedemo"
 }
 
 variable "vpc_cidr" {
@@ -21,5 +28,15 @@ variable "private_subnet_cidr" {
 
 variable "bastion_ami" {
   description = "AMI for bastion server"
-  default = "ami-15b72466"
+  default = "ami-d8106da1"
+}
+
+variable "nat_ami" {
+  description = "AMI for NAT gateway"
+  default = "ami-9cb126e5"
+}
+
+variable "aws_key_name" {
+  description = "Key pair to nat access" #Create a key pair in AWS and specify the name here
+  default = "euwest1keypair"
 }

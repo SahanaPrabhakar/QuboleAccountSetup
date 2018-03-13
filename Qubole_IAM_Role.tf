@@ -211,7 +211,6 @@ resource "aws_iam_role" "QU_Iam_Role" {
 EOF
 }
 
-
 resource "aws_iam_role_policy_attachment" "role-attach-ec2" {
     role       = "${aws_iam_role.QU_Iam_Role.name}"
     policy_arn = "${aws_iam_policy.policyec2.arn}"
@@ -220,4 +219,8 @@ resource "aws_iam_role_policy_attachment" "role-attach-ec2" {
 resource "aws_iam_role_policy_attachment" "role-attach-s3" {
     role       = "${aws_iam_role.QU_Iam_Role.name}"
     policy_arn = "${aws_iam_policy.policys3.arn}"
+}
+
+output "role_arn" {
+  value = "${aws_iam_role.QU_Iam_Role.arn}"
 }
