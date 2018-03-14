@@ -211,6 +211,29 @@ resource "aws_iam_role" "QU_Iam_Role" {
 EOF
 }
 
+resource "aws_iam_policy" "qubole_cross_account_policy" {
+  name        = "qubole_cross_account_policy"
+  path        = "/"
+  description = "qubole_cross_account_policy"
+ policy = <<EOF
+{
+"Version": "2012-10-17",
+ "Statement": [
+               {
+                 "Effect": "Allow",
+                 "Action": "iam:GetInstanceProfile",
+                 "Resource": "${aws_iam_role.QU_Iam_Role.arn}"
+               },
+               {
+                 "Effect": "Allow",
+                 "Action": "iam:PassRole",
+                 "Resource": "${aws_iam_role.QU_Iam_Role.arn}"
+               }
+              ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy_attachment" "role-attach-ec2" {
     role       = "${aws_iam_role.QU_Iam_Role.name}"
     policy_arn = "${aws_iam_policy.policyec2.arn}"
@@ -219,6 +242,11 @@ resource "aws_iam_role_policy_attachment" "role-attach-ec2" {
 resource "aws_iam_role_policy_attachment" "role-attach-s3" {
     role       = "${aws_iam_role.QU_Iam_Role.name}"
     policy_arn = "${aws_iam_policy.policys3.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "role-attach-cross-account" {
+    role       = "${aws_iam_role.QU_Iam_Role.name}"
+    policy_arn = "${aws_iam_policy.qubole_cross_account_policy.arn}"
 }
 
 output "role_arn" {

@@ -1,6 +1,6 @@
-resource "aws_security_group" "bastion" {
+resource "aws_security_group" "bastion_sg" {
   name = "bastion"
-  description = "Allow SSH traffic from the internet"
+  description = "Allow SSH traffic"
   vpc_id = "${aws_vpc.qubole_vpc.id}"
 
   ingress {
@@ -9,18 +9,19 @@ resource "aws_security_group" "bastion" {
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-resource "aws_security_group" "allow_access_from_bastion" {
-  name = "allow-access-from-bastion"
-  description = "Grants access to SSH from bastion server"
-  vpc_id = "${aws_vpc.qubole_vpc.id}"
 
   ingress {
-    from_port = 22
-    to_port = 22
+    from_port = 7000
+    to_port = 7000
     protocol = "tcp"
-    security_groups = ["${aws_security_group.bastion.id}"]
+    cidr_blocks = ["${var.private_subnet_cidr}"]
+  }
+
+  egress {
+    protocol    = -1
+    from_port   = 0 
+    to_port     = 0 
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -28,7 +29,7 @@ resource "aws_instance" "bastion" {
   ami = "${var.bastion_ami}"
   instance_type = "t2.micro"
   subnet_id = "${aws_subnet.subnet-public.id}"
-  security_groups = ["${aws_security_group.bastion.id}"] 
+  security_groups = ["${aws_security_group.bastion_sg.id}"] 
 }
 
 resource "aws_eip" "bastion" {

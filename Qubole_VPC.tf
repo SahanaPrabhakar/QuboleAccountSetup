@@ -157,3 +157,30 @@ resource "aws_route_table_association" "subnet-private" {
     subnet_id = "${aws_subnet.subnet-private.id}"
     route_table_id = "${aws_route_table.subnet-route-table-private.id}"
 }
+
+/*
+  Qubole cluster security group
+*/
+resource "aws_security_group" "qubole_cluster_sg" {
+    name = "launch-wizard-2"
+    description = "Allow all. Clusters will be deployed in private subnet"
+    ingress {
+	 from_port   = 0
+         to_port     = 0
+         protocol    = "-1"
+         cidr_blocks = ["0.0.0.0/0"]
+   }
+
+   egress {
+         from_port       = 0
+         to_port         = 0
+         protocol        = "-1"
+         cidr_blocks     = ["0.0.0.0/0"]
+   }
+
+   vpc_id = "${aws_vpc.qubole_vpc.id}"
+
+   tags {
+        Name = "launch-wizard-2"
+   }
+}
