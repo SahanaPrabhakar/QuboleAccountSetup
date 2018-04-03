@@ -182,8 +182,8 @@ EOF
 }
     
 
-resource "aws_iam_role" "QU_Iam_Role" {
-  name = "QU_Iam_Role"
+resource "aws_iam_role" "Qubole_Iam_Role" {
+  name = "Qubole_iam_role"
   assume_role_policy = <<EOF
 {
       "Version": "2012-10-17",
@@ -211,6 +211,11 @@ resource "aws_iam_role" "QU_Iam_Role" {
 EOF
 }
 
+resource "aws_iam_instance_profile" "Qubole_role_profile" {
+  name  = "Qubole_iam_role"
+  role = "${aws_iam_role.Qubole_Iam_Role.name}"
+}
+
 resource "aws_iam_policy" "qubole_cross_account_policy" {
   name        = "qubole_cross_account_policy"
   path        = "/"
@@ -222,12 +227,12 @@ resource "aws_iam_policy" "qubole_cross_account_policy" {
                {
                  "Effect": "Allow",
                  "Action": "iam:GetInstanceProfile",
-                 "Resource": "${aws_iam_role.QU_Iam_Role.arn}"
+                 "Resource": "${aws_iam_instance_profile.Qubole_role_profile.arn}"
                },
                {
                  "Effect": "Allow",
                  "Action": "iam:PassRole",
-                 "Resource": "${aws_iam_role.QU_Iam_Role.arn}"
+                 "Resource": "${aws_iam_role.Qubole_Iam_Role.arn}"
                }
               ]
 }
@@ -235,20 +240,26 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "role-attach-ec2" {
-    role       = "${aws_iam_role.QU_Iam_Role.name}"
+    role       = "${aws_iam_role.Qubole_Iam_Role.name}"
     policy_arn = "${aws_iam_policy.policyec2.arn}"
 }
 
 resource "aws_iam_role_policy_attachment" "role-attach-s3" {
-    role       = "${aws_iam_role.QU_Iam_Role.name}"
+    role       = "${aws_iam_role.Qubole_Iam_Role.name}"
     policy_arn = "${aws_iam_policy.policys3.arn}"
 }
 
 resource "aws_iam_role_policy_attachment" "role-attach-cross-account" {
-    role       = "${aws_iam_role.QU_Iam_Role.name}"
+    role       = "${aws_iam_role.Qubole_Iam_Role.name}"
     policy_arn = "${aws_iam_policy.qubole_cross_account_policy.arn}"
 }
 
+
+
 output "role_arn" {
-  value = "${aws_iam_role.QU_Iam_Role.arn}"
+  value = "${aws_iam_role.Qubole_Iam_Role.arn}"
+}
+
+output "instance_profile_role_arn" {
+  value = "${aws_iam_instance_profile.Qubole_role_profile.arn}"
 }
