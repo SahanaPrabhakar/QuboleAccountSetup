@@ -23,6 +23,9 @@ resource "aws_security_group" "bastion_sg" {
     to_port     = 0 
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags {
+        Name = "Qubole bastion SG"
+    }
 }
 
 resource "aws_instance" "bastion" {
@@ -30,6 +33,10 @@ resource "aws_instance" "bastion" {
   instance_type = "t2.micro"
   subnet_id = "${aws_subnet.subnet-public.id}"
   security_groups = ["${aws_security_group.bastion_sg.id}"] 
+  key_name = "${var.aws_key_name}"
+  tags {
+        Name = "Qubole bastion"
+    }
 }
 
 resource "aws_eip" "bastion" {
