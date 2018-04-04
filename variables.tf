@@ -40,3 +40,4 @@ variable "aws_key_name" {
   description = "Key pair to nat access" #Create a key pair in AWS and specify the name here
   default = "euwest1keypair"
 }
+
