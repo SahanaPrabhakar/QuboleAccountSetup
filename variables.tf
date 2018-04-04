@@ -31,11 +31,6 @@ variable "bastion_ami" {
   default = "ami-d8106da1"
 }
 
-variable "nat_ami" {
-  description = "AMI for NAT gateway"
-  default = "ami-9cb126e5"
-}
-
 variable "aws_key_name" {
   description = "Key pair to nat access" #Create a key pair in AWS and specify the name here
   default = "euwest1keypair"
